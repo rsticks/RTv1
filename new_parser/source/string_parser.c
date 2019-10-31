@@ -134,8 +134,6 @@ static void		ft_parse_objects(t_sdl *sdl, int k)
 
 void string_parser(t_sdl *sdl)
 {
-	//t_object	*object;
-
 	ft_checkscene(sdl, 9);
 	if (ft_strcmp(sdl->scene[7], "content") != 0 || ft_strcmp(sdl->scene[8], "{") != 0 || ft_strcmp(sdl->scene[sdl->line_count - 1], "}") != 0)
 		kill_all("Can't find content <string_parser>");

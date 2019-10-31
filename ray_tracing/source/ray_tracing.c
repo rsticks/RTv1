@@ -6,7 +6,7 @@
 /*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:38:16 by daron             #+#    #+#             */
-/*   Updated: 2019/10/30 15:13:44 by daron            ###   ########.fr       */
+/*   Updated: 2019/10/31 16:29:53 by daron            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void get_direction(t_point point, t_ray *ray, t_sdl *sdl) // задаем нап
 	//printf("ray->dir = (%g %g %g)\n", ray->dir.x, ray->dir.y, ray->dir.z);
 	//printf("point = {%g %g} dir = {%g %g %g}\n", point.x, point.y, ray->dir.x, ray->dir.y, ray->dir.z);
 	ray->dir = vec_rot_xyz(ray->dir, sdl->cam.rot);
-	//printf("ray->dir = (%g %g %g)\n", ray->dir.x, ray->dir.y, ray->dir.z);
+	printf("ray->dir = (%g %g %g)\n", ray->dir.x, ray->dir.y, ray->dir.z);
 }
 
 void set_color(t_sdl *sdl, int ind, int x, int y) // задаем и выводим цвет фигуры в заисимости от интенсивности точки которую мы получили
