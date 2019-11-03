@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/10/29 16:36:04 by daron            ###   ########.fr       */
+/*   Updated: 2019/11/03 20:08:20 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void sdl_initialize(t_sdl *sdl)
 int main(int argc, char **argv)
 {
 	t_sdl sdl;
-	SDL_Event event;
+	//SDL_Event event;
 	t_ray ray;
 
 	sdl_initialize(&sdl);
@@ -99,10 +99,6 @@ int main(int argc, char **argv)
 
 	printf("ambient = %g\n\n", sdl.ambient);
 
-	while (1)
-		while (SDL_PollEvent(&event))
-			if ((SDL_QUIT == event.type) || (SDL_KEYDOWN == event.type && SDL_SCANCODE_ESCAPE == event.key.keysym.scancode))
-				exit(0);
-
+	events(ray, sdl);
 	return (0);
 }

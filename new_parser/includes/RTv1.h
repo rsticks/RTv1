@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RTv1.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/10/31 13:59:24 by daron            ###   ########.fr       */
+/*   Updated: 2019/11/03 20:04:13 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ typedef struct		s_sdl
 /*
 ** It's help you - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm
 */
-
+void	events(t_ray ray, t_sdl sdl);
 void scene_parser(t_sdl *sdl, char *scene_name);
 int		kill_all(char *message);
 void sdl_initialize(t_sdl *sdl);
