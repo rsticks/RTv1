@@ -6,13 +6,14 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/11/03 20:04:13 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/06 14:16:00 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
+# include <OpenCL/opencl.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -57,6 +58,21 @@
 ** Help
 */
 # define EPS 0.000001
+
+typedef struct			s_cl
+{
+	cl_context			context;
+	cl_command_queue	queue;
+	cl_platform_id		*plat_id;
+	cl_device_id		*dev_id;
+	cl_uint				num_platforms;
+	cl_uint				num_device;
+	cl_kernel			kernel;
+	cl_program			prog;
+	cl_mem				d_mem;
+	cl_mem				img;
+	cl_mem				i_mem;
+}						t_cl;
 
 typedef struct	s_point
 {
@@ -155,60 +171,60 @@ typedef struct		s_sdl
 /*
 ** It's help you - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm
 */
-void	events(t_ray ray, t_sdl sdl);
-void scene_parser(t_sdl *sdl, char *scene_name);
-int		kill_all(char *message);
-void sdl_initialize(t_sdl *sdl);
-double	get_quadratic_solution(double a, double b, double discriminant);
 
-void free_mas(char **mas);
+void				init_cl(t_cl *cl);
+void				events(t_ray ray, t_sdl sdl);
+void 				scene_parser(t_sdl *sdl, char *scene_name);
+int					kill_all(char *message);
+void 				sdl_initialize(t_sdl *sdl);
+double				get_quadratic_solution(double a, double b, double discriminant);
+void 				free_mas(char **mas);
 
-void object_parser(t_sdl *sdl, char **param);
-void scene_parser(t_sdl *sdl, char *scene_name);
+void 				object_parser(t_sdl *sdl, char **param);
+void 				scene_parser(t_sdl *sdl, char *scene_name);
 
-void init_camera(t_sdl *sdl, char **param);
+void 				init_camera(t_sdl *sdl, char **param);
 
-void light(t_sdl *sdl, t_ray *ray);
+void 				light(t_sdl *sdl, t_ray *ray);
 
+t_vector 			get_sphere_normal(t_ray *ray, t_object *obj);
+double 				get_sphere_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
 
-t_vector get_sphere_normal(t_ray *ray, t_object *obj);
-double get_sphere_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
+t_vector 			get_plane_normal(t_ray *ray, t_object *obj);
+double 				get_plane_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
 
-t_vector get_plane_normal(t_ray *ray, t_object *obj);
-double get_plane_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
+t_vector 			get_cylinder_normal(t_ray *ray, t_object *obj);
+double				get_cylinder_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
 
-t_vector get_cylinder_normal(t_ray *ray, t_object *obj);
-double get_cylinder_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
+t_vector			get_cone_normal(t_ray *ray, t_object *obj);
+double				get_cone_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
 
-t_vector get_cone_normal(t_ray *ray, t_object *obj);
-double get_cone_intersection(t_vector cam_pos, t_vector dir, t_object *obj);
+void				ray_tracing_init(t_sdl *sdl, t_ray *ray);
+void				get_direction(t_point point, t_ray *ray, t_sdl *sdl);
 
-void ray_tracing_init(t_sdl *sdl, t_ray *ray);
-void get_direction(t_point point, t_ray *ray, t_sdl *sdl);
+t_point				init_point(double x, double y);
 
-t_point init_point(double x, double y);
+void				init_ambient(t_sdl *sdl, char **param);
 
-void init_ambient(t_sdl *sdl, char **param);
+void				string_parser(t_sdl *sdl);
 
-void string_parser(t_sdl *sdl);
+int					ft_atoi_n(char *str, int *k);
+t_light				*ft_add_light_link(t_sdl *sdl, t_light *link);
+t_object			*ft_add_object_link(t_sdl *sdl, t_object *link);
 
-int				ft_atoi_n(char *str, int *k);
-t_light			*ft_add_light_link(t_sdl *sdl, t_light *link);
-t_object		*ft_add_object_link(t_sdl *sdl, t_object *link);
+void				ft_col_n_pos(t_sdl *sdl, t_object *link, int k);
 
-void ft_col_n_pos(t_sdl *sdl, t_object *link, int k);
+void				ft_add_light(t_sdl *sdl, int *k, int ind);
+void				ft_add_cyl_cone(t_sdl *sdl, int *k, int name, int ind);
+void				ft_add_plane(t_sdl *sdl, int *k, int i);
+void				ft_add_sphere(t_sdl *sdl, int *k, int i);
 
-void	ft_add_light(t_sdl *sdl, int *k, int ind);
-void	ft_add_cyl_cone(t_sdl *sdl, int *k, int name, int ind);
-void	ft_add_plane(t_sdl *sdl, int *k, int i);
-void	ft_add_sphere(t_sdl *sdl, int *k, int i);
+void				sphere_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
+void				plane_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
+void				cylinder_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
+void				cone_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
 
-void sphere_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
-void plane_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
-void cylinder_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
-void cone_intersection(t_sdl *sdl, t_ray *camera, t_object *obj);
-
-void check_object(t_sdl *sdl);
+void				check_object(t_sdl *sdl);
 
 
 

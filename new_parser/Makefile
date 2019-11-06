@@ -10,7 +10,8 @@ SRC = source/main.c \
 		source/check_object.c \
 		source/ray_tracing.c \
 		source/init_function.c \
-		source/events.c
+		source/events.c \
+		source/cl.c
 
 OBJ = $(SRC:.c=.o)
 LIBS = libft/libft.a ftvector/ftvector.a

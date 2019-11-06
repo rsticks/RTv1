@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/11/03 20:08:20 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/06 14:17:17 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,12 @@ void sdl_initialize(t_sdl *sdl)
 
 int main(int argc, char **argv)
 {
-	t_sdl sdl;
-	//SDL_Event event;
-	t_ray ray;
+	t_cl	*cl;
+	t_sdl	sdl;
+	t_ray	ray;
 
+	cl = (t_cl*)malloc(sizeof(t_cl));
+	init_cl(cl);
 	sdl_initialize(&sdl);
 
 	if (argc != 2 || !argv[1])
