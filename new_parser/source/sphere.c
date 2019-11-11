@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 14:51:17 by daron             #+#    #+#             */
-/*   Updated: 2019/10/31 14:36:19 by daron            ###   ########.fr       */
+/*   Updated: 2019/11/11 14:24:44 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void			ft_add_sphere(t_sdl *sdl, int *k, int ind)
 	*k += 7;
 }
 
-t_vector get_sphere_normal(t_ray *ray, t_object *obj)
+t_vector 		get_sphere_normal(t_ray *ray, t_object *obj)
 {
-	t_vector op;
+	t_vector	op;
 
 	op = vec_sum(ray->orig, vec_scale(ray->dir, obj->t));
 	op = vec_norm(vec_sub(op, obj->pos));
@@ -53,13 +53,13 @@ t_vector get_sphere_normal(t_ray *ray, t_object *obj)
 	return (op);
 }
 
-double get_sphere_intersection(t_vector cam_pos, t_vector dir, t_object *obj)
+double			get_sphere_intersection(t_vector cam_pos, t_vector dir, t_object *obj)
 {
-	double a;
-	double b;
-	double c;
-	double discriminant;
-	t_vector oc;
+	double 		a;
+	double 		b;
+	double 		c;
+	double 		discriminant;
+	t_vector 	oc;
 
 	oc = vec_sub(cam_pos, obj->pos);
 	a = vec_dot(dir, dir);
@@ -71,7 +71,7 @@ double get_sphere_intersection(t_vector cam_pos, t_vector dir, t_object *obj)
 	return (get_quadratic_solution(a, b , discriminant));
 }
 
-void sphere_intersection(t_sdl *sdl, t_ray *camera, t_object *obj)
+void			sphere_intersection(t_sdl *sdl, t_ray *camera, t_object *obj)
 {
 	obj->t = get_sphere_intersection(camera->orig, camera->dir, obj);
 	if (obj->t > 0 && obj->t < sdl->min_t)

@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/06 14:30:49 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/11 17:00:16 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,31 @@ void			init_cl(t_cl *cl)
 	(const char**)&k_s, &k_l, &error);
 	error = clBuildProgram(cl->prog, 1, cl->dev_id, NULL, NULL, NULL);
 	cl->kernel = clCreateKernel(cl->prog, "start", &error);
+}
+
+void			start_kernel(t_cl *cl, t_object *obj, t_sdl *sdl)
+{
+	int			err;
+	double		dm[6];
+	int			im[7];
+	size_t		gws;
+	int			x;
+	int			y;
+
+	gws = W_WIDTH * W_HEIGHT;
+
+	err = clEnqueueWriteBuffer(cl->queue, cl->i_mem, CL_TRUE, 0, sizeof(int) * 7, im, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(cl->queue, cl->d_mem, CL_TRUE, 0, sizeof(double) * 6, dm, 0, NULL, NULL);
+	
+	err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 1, NULL, &gws, NULL, 0, NULL, NULL);
+
+	err = clEnqueueReadBuffer(cl->queue, cl->img, CL_TRUE, 0, sizeof(int) * gws, f->mlx.data, 0, NULL, NULL);
+
+	if (obj != NULL)
+		SDL_SetRenderDrawColor(sdl->render, obj->col.r * p, obj->col.g * p, obj->col.b * p, 255);
+	else
+		SDL_SetRenderDrawColor(sdl->render, 0, 0, 0, 255);
+
+	SDL_RenderDrawPoint(sdl->render, x, y);
+//	mlx_put_image_to_window(f->mlx.mlx, f->mlx.win, f->mlx.img, 0, 0);
 }
