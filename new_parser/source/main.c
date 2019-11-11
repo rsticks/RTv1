@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/11/06 14:36:56 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/11 20:00:33 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int main(int argc, char **argv)
 	ray.orig.y = sdl.cam.pos.y;
 	ray.orig.z = sdl.cam.pos.z;
 
+	
 	ray_tracing_init(&sdl, &ray);
 	SDL_RenderPresent(sdl.render);
 

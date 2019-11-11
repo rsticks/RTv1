@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/11 17:00:16 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/11 20:00:33 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ void			init_cl(t_cl *cl)
 	(const char**)&k_s, &k_l, &error);
 	error = clBuildProgram(cl->prog, 1, cl->dev_id, NULL, NULL, NULL);
 	cl->kernel = clCreateKernel(cl->prog, "start", &error);
+	cl->d_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(double) * 6, NULL, &error);
+	cl->i_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * 6, NULL, &error);
+	cl->img = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * W_WIDTH * W_HEIGHT, NULL, &error);
 }
 
 void			start_kernel(t_cl *cl, t_object *obj, t_sdl *sdl)
