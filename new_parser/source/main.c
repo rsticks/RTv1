@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/11/11 20:00:33 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/13 18:37:37 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,12 @@ int main(int argc, char **argv)
 	t_cl	*cl;
 	t_sdl 	sdl;
 	t_ray 	ray;
+	int o_count;
+	int l_count;
+	cl_double d;
 
+	d = 5.5;
 	cl = (t_cl*)malloc(sizeof(t_cl));
-	init_cl(cl);
 	sdl_initialize(&sdl);
 
 	if (argc != 2 || !argv[1])
@@ -94,7 +97,9 @@ int main(int argc, char **argv)
 	ray.orig.y = sdl.cam.pos.y;
 	ray.orig.z = sdl.cam.pos.z;
 
-	
+	cl->cl_obj = transform_obj_data(sdl.obj, &o_count);
+	cl->cl_light = transform_light_data(sdl.light, &l_count);
+	init_cl(cl, o_count, l_count);
 	ray_tracing_init(&sdl, &ray);
 	SDL_RenderPresent(sdl.render);
 

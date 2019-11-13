@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/11/11 20:00:33 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/13 18:37:37 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,11 @@ typedef struct			s_cl
 	cl_uint				num_device;
 	cl_kernel			kernel;
 	cl_program			prog;
-	cl_mem				d_mem;
+	cl_mem				obj_mem;
+	cl_mem				light_mem;
 	cl_mem				img;
-	cl_mem				i_mem;
+	t_cl_object			*cl_obj;
+	t_cl_light			*cl_light;
 }						t_cl;
 
 typedef struct	s_point
@@ -143,6 +145,42 @@ typedef struct		s_object
 	struct s_object	*next;
 }					t_object;
 
+typedef struct		s_cl_object
+{
+	
+	cl_double			x_pos;
+	cl_double			y_pos;
+	cl_double			z_pos;
+	cl_double			x_rot;
+	cl_double			y_rot;
+	cl_double			z_rot;
+	cl_int				r_col;
+	cl_int				g_col;
+	cl_int				b_col;
+	cl_double			r;
+	cl_int				name;
+	cl_double			specular;
+	cl_double				t;
+}					t_cl_object;
+
+typedef	struct		s_cl_light
+{
+	cl_double			x_pos;
+	cl_double			y_pos;
+	cl_double			z_pos;
+	cl_double			inten;
+	cl_int				r_col;
+	cl_int				g_col;
+	cl_int				b_col;
+	cl_double			x_p;
+	cl_double			y_p;
+	cl_double			z_p;
+	cl_double			x_n;
+	cl_double			y_n;
+	cl_double			z_n;
+	cl_double			new_inten;
+}					t_cl_light;
+
 typedef struct		s_sdl
 {
 	SDL_Window		*window;
@@ -166,13 +204,16 @@ typedef struct		s_sdl
 	int				line_count; // количество линий в buf
 	char			**scene; //храним сцену джля парсинга
 
+
 }					t_sdl;
 
 /*
 ** It's help you - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm
 */
 
-void				init_cl(t_cl *cl);
+t_cl_object		*transform_obj_data(t_object *obj, int *count);
+t_cl_light		*transform_light_data(t_light *light, int *count);
+void				init_cl(t_cl *cl, int o_count, int l_count);
 void				events(t_ray ray, t_sdl sdl);
 void 				scene_parser(t_sdl *sdl, char *scene_name);
 int					kill_all(char *message);
