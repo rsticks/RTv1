@@ -6,13 +6,31 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/13 18:37:37 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/14 18:32:42 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RTv1.h"
 
-void			init_cl(t_cl *cl, int o_count, int l_count)
+void			mem_to_kernel(t_sdl *sdl, t_ray *ray, double *d_mem, int *i_mem)
+{
+	d_mem[0] = sdl->min_t;
+	d_mem[1] = ray->dir.x;
+	d_mem[2] = ray->dir.y;
+	d_mem[3] = ray->dir.z;
+	d_mem[4] = ray->orig.x;
+	d_mem[5] = ray->orig.y;
+	d_mem[6] = ray->orig.z;
+	d_mem[7] = sdl->cam.rot.x;
+	d_mem[8] = sdl->cam.rot.y;
+	d_mem[9] = sdl->cam.rot.z;
+	d_mem[10] = sdl->ambient;
+
+	i_mem[0] = W_WIDTH;
+	i_mem[1] = W_HEIGHT;
+}
+
+void			init_cl(t_cl *cl)
 {
 	int			fd;
 	int			i;
@@ -47,35 +65,53 @@ void			init_cl(t_cl *cl, int o_count, int l_count)
 	(const char**)&k_s, &k_l, &error);
 	error = clBuildProgram(cl->prog, 1, cl->dev_id, NULL, NULL, NULL);
 	cl->kernel = clCreateKernel(cl->prog, "start", &error);
-	cl->obj_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_object) * o_count, NULL, &error);
-	cl->light_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_light) * l_count, NULL, &error);
-	cl->img = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * W_WIDTH * W_HEIGHT, NULL, &error);
-	error = clSetKernelArg(cl->kernel, 0, sizeof(cl_mem), (void*)&cl->obj_mem);
+	cl->obj_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_object) * cl->o_count, &cl->cl_obj, &error);
+	cl->light_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_light) * cl->l_count, &cl->cl_light, &error);
+	cl->img = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * W_HEIGHT * W_WIDTH, NULL, &error);
+	cl->i_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * 2, NULL, &error);	
+	cl->d_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(double) * 11, NULL, &error);
+	error = clSetKernelArg(cl->kernel, 0, sizeof(cl_mem), &cl->obj_mem);
+	error = clSetKernelArg(cl->kernel, 1, sizeof(cl_mem), &cl->light_mem);
+	error = clSetKernelArg(cl->kernel, 2, sizeof(cl_mem), &cl->img);
+	error = clSetKernelArg(cl->kernel, 3, sizeof(cl_mem), &cl->i_mem);
+	error = clSetKernelArg(cl->kernel, 4, sizeof(cl_mem), &cl->d_mem);
 }
 
-void			start_kernel(t_cl *cl, t_object *obj, t_sdl *sdl)
+void			start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray)
 {
 	int			err;
-	double		dm[6];
-	int			im[7];
 	size_t		gws;
-	int			x;
+	t_output	output;
+	int			i_mem[2];
+	double		d_mem[11];
+	int			p_gws;
+	int 		x;
 	int			y;
 
+	mem_to_kernel(sdl, ray, d_mem, i_mem);
 	gws = W_WIDTH * W_HEIGHT;
 
-	err = clEnqueueWriteBuffer(cl->queue, cl->i_mem, CL_TRUE, 0, sizeof(int) * 7, im, 0, NULL, NULL);
-	err = clEnqueueWriteBuffer(cl->queue, cl->d_mem, CL_TRUE, 0, sizeof(double) * 6, dm, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(cl->queue, cl->i_mem, CL_TRUE, 0, sizeof(int) * 2, i_mem, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(cl->queue, cl->d_mem, CL_TRUE, 0, sizeof(double) * 11, d_mem, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(cl->queue, cl->obj_mem, CL_TRUE, 0, sizeof(t_cl_object) * cl->o_count, &cl->cl_obj, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(cl->queue, cl->obj_mem, CL_TRUE, 0, sizeof(t_cl_light) * cl->l_count, &cl->cl_light, 0, NULL, NULL);
 	
 	err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 1, NULL, &gws, NULL, 0, NULL, NULL);
 
-	err = clEnqueueReadBuffer(cl->queue, cl->img, CL_TRUE, 0, sizeof(int) * gws, f->mlx.data, 0, NULL, NULL);
+	err = clEnqueueReadBuffer(cl->queue, cl->img, CL_TRUE, 0, sizeof(int) * gws, &cl->data, 0, NULL, NULL);
 
-	if (obj != NULL)
-		SDL_SetRenderDrawColor(sdl->render, obj->col.r * p, obj->col.g * p, obj->col.b * p, 255);
-	else
+	p_gws = 0;
+	while (p_gws < gws)
+	{
+
+		SDL_SetRenderDrawColor(sdl->render, (cl->data[p_gws] & 0xFF0000) * p, (cl->data[p_gws] & 0x00FF00) * p, (cl->data[p_gws] & 0x0000FF) * p, 255);
+		SDL_RenderDrawPoint(sdl->render, x, y);
+		x++;	
+	}
+	
+	//if (obj != NULL)
+	//else 
 		SDL_SetRenderDrawColor(sdl->render, 0, 0, 0, 255);
 
-	SDL_RenderDrawPoint(sdl->render, x, y);
 //	mlx_put_image_to_window(f->mlx.mlx, f->mlx.win, f->mlx.img, 0, 0);
 }

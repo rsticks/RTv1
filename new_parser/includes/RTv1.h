@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/11/13 18:37:37 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/14 18:27:58 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,13 @@ typedef struct			s_cl
 	cl_mem				obj_mem;
 	cl_mem				light_mem;
 	cl_mem				img;
+	cl_mem				d_mem;
+	cl_mem				i_mem;
 	t_cl_object			*cl_obj;
 	t_cl_light			*cl_light;
+	int					*data;
+	int 				o_count;
+	int 				l_count;
 }						t_cl;
 
 typedef struct	s_point
@@ -88,6 +93,15 @@ typedef struct s_color
 	int g;
 	int b;
 }				t_color;
+
+typedef struct	s_output
+{
+	cl_int		r;
+	cl_int		g;
+	cl_int		b;
+	cl_int		x;
+	cl_int		y;
+}				t_output;
 
 /*
 ** pos - Camera position
@@ -213,7 +227,7 @@ typedef struct		s_sdl
 
 t_cl_object		*transform_obj_data(t_object *obj, int *count);
 t_cl_light		*transform_light_data(t_light *light, int *count);
-void				init_cl(t_cl *cl, int o_count, int l_count);
+void				init_cl(t_cl *cl);
 void				events(t_ray ray, t_sdl sdl);
 void 				scene_parser(t_sdl *sdl, char *scene_name);
 int					kill_all(char *message);
