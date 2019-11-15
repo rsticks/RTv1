@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:32:59 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/13 18:37:37 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:16:48 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_cl_light		*transform_light_data(t_light *light, int *count)
 	while (light)
 	{
 		count++;
-		light->next;
+		light = light->next;
 	}
 	cl_light = (t_cl_light*)malloc(sizeof(t_cl_light) * *count);
 	count = 0;

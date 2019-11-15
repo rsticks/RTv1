@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/11/14 18:27:36 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:11:31 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ int main(int argc, char **argv)
 	t_cl	*cl;
 	t_sdl 	sdl;
 	t_ray 	ray;
-	int o_count;
-	int l_count;
 	cl_double d;
 
 	d = 5.5;

@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/15 16:04:04 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:15:07 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void			start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray)
 {
 	int			err;
 	size_t		gws;
-	t_output	output;
 	int			i_mem[2];
 	double		d_mem[11];
 	int			p_gws;
@@ -101,12 +100,13 @@ void			start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray)
 	err = clEnqueueReadBuffer(cl->queue, cl->img, CL_TRUE, 0, sizeof(int) * gws, &cl->data, 0, NULL, NULL);
 
 	p_gws = 0;
-	while (p_gws < gws)
+	while (p_gws < (int)gws)
 	{
-
+		x = p_gws % W_WIDTH;
+		y = p_gws / W_WIDTH;
 		SDL_SetRenderDrawColor(sdl->render, (cl->data[p_gws] & 0xFF0000), (cl->data[p_gws] & 0x00FF00), (cl->data[p_gws] & 0x0000FF), 255);
 		SDL_RenderDrawPoint(sdl->render, x, y);
-		x++;	
+		p_gws++;	
 	}
 	
 	//if (obj != NULL)

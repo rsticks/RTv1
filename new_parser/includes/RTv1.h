@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/11/14 18:27:58 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:11:15 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,27 +59,7 @@
 */
 # define EPS 0.000001
 
-typedef struct			s_cl
-{
-	cl_context			context;
-	cl_command_queue	queue;
-	cl_platform_id		*plat_id;
-	cl_device_id		*dev_id;
-	cl_uint				num_platforms;
-	cl_uint				num_device;
-	cl_kernel			kernel;
-	cl_program			prog;
-	cl_mem				obj_mem;
-	cl_mem				light_mem;
-	cl_mem				img;
-	cl_mem				d_mem;
-	cl_mem				i_mem;
-	t_cl_object			*cl_obj;
-	t_cl_light			*cl_light;
-	int					*data;
-	int 				o_count;
-	int 				l_count;
-}						t_cl;
+
 
 typedef struct	s_point
 {
@@ -220,6 +200,28 @@ typedef struct		s_sdl
 
 
 }					t_sdl;
+
+typedef struct			s_cl
+{
+	cl_context			context;
+	cl_command_queue	queue;
+	cl_platform_id		*plat_id;
+	cl_device_id		*dev_id;
+	cl_uint				num_platforms;
+	cl_uint				num_device;
+	cl_kernel			kernel;
+	cl_program			prog;
+	cl_mem				obj_mem;
+	cl_mem				light_mem;
+	cl_mem				img;
+	cl_mem				d_mem;
+	cl_mem				i_mem;
+	t_cl_object			*cl_obj;
+	t_cl_light			*cl_light;
+	int					*data;
+	int 				o_count;
+	int 				l_count;
+}						t_cl;
 
 /*
 ** It's help you - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm
