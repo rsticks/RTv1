@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/15 19:15:57 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 19:17:07 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void			init_cl(t_cl *cl)
 	error = clBuildProgram(cl->prog, 1, cl->dev_id, NULL, NULL, NULL);
 	clGetProgramBuildInfo(cl->prog, cl->dev_id[0], CL_PROGRAM_BUILD_LOG, 0, NULL, &hello);
 	clGetProgramBuildInfo(cl->prog, cl->dev_id[0], CL_PROGRAM_BUILD_LOG, hello, test, NULL);
-	printf("--------------------------------DEBUG------------------------------------\n%s\n", test);
+	printf("--------------------------------ERRORS OF KERNEL------------------------------------\n%s\n", test);
 	cl->kernel = clCreateKernel(cl->prog, "start", &error);
 	cl->obj_mem = 	clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_object) * cl->o_count, NULL, &error);
 	cl->light_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_light) * cl->l_count, NULL, &error);
