@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/14 18:32:42 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:04:04 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void			start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray)
 	while (p_gws < gws)
 	{
 
-		SDL_SetRenderDrawColor(sdl->render, (cl->data[p_gws] & 0xFF0000) * p, (cl->data[p_gws] & 0x00FF00) * p, (cl->data[p_gws] & 0x0000FF) * p, 255);
+		SDL_SetRenderDrawColor(sdl->render, (cl->data[p_gws] & 0xFF0000), (cl->data[p_gws] & 0x00FF00), (cl->data[p_gws] & 0x0000FF), 255);
 		SDL_RenderDrawPoint(sdl->render, x, y);
 		x++;	
 	}
