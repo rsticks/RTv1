@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_tracing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:38:16 by daron             #+#    #+#             */
-/*   Updated: 2019/10/31 17:26:55 by daron            ###   ########.fr       */
+/*   Updated: 2019/11/11 17:00:16 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void intersection(t_ray *ray, t_sdl *sdl, int x, int y) // нахождения 
 		obj = obj->next;
 		//printf("sdl->clos_obj = %d sdl->obj = %g\n",sdl->clos_obj, sdl->obj->t);
 	}
-	//printf("ray->dir = (%g %g %g)\n", ray->dir.x, ray->dir.y, ray->dir.z);
+	printf("ray->dir = (%g %g %g)\n", ray->dir.x, ray->dir.y, ray->dir.z);
 	if (sdl->clos_obj != NULL)
 		light(sdl, ray);
 	//printf("ray = (%g %g %g) ", ray->dir.x, ray->dir.y, ray->dir.z);

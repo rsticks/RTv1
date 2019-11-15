@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daron <daron@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:08:56 by daron             #+#    #+#             */
-/*   Updated: 2019/10/31 16:06:58 by daron            ###   ########.fr       */
+/*   Updated: 2019/11/14 18:27:36 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,17 @@ void sdl_initialize(t_sdl *sdl)
 
 int main(int argc, char **argv)
 {
-	t_sdl sdl;
-	SDL_Event event;
-	t_ray ray;
+	t_cl	*cl;
+	t_sdl 	sdl;
+	t_ray 	ray;
+	int o_count;
+	int l_count;
+	cl_double d;
 
+	d = 5.5;
+	cl = (t_cl*)malloc(sizeof(t_cl));
 	sdl_initialize(&sdl);
-
+	cl->data = (int*)malloc(sizeof(int) * W_HEIGHT * W_WIDTH);
 	if (argc != 2 || !argv[1])
 		kill_all("usage: ./RTv1 scene_name");
 	scene_parser(&sdl, argv[1]);
@@ -92,6 +97,9 @@ int main(int argc, char **argv)
 	ray.orig.y = sdl.cam.pos.y;
 	ray.orig.z = sdl.cam.pos.z;
 
+	cl->cl_obj = transform_obj_data(sdl.obj, &cl->o_count);
+	cl->cl_light = transform_light_data(sdl.light, &cl->l_count);
+	init_cl(cl);
 	ray_tracing_init(&sdl, &ray);
 	SDL_RenderPresent(sdl.render);
 
@@ -137,14 +145,6 @@ int main(int argc, char **argv)
 		object = object->next;
 	}
 
-
-	while (1)
-		while (SDL_PollEvent(&event))
-			if ((SDL_QUIT == event.type) || (SDL_KEYDOWN == event.type && SDL_SCANCODE_ESCAPE == event.key.keysym.scancode))
-			{
-				my_free(&sdl);
-				exit(0);
-			}
-
+	events(ray, sdl);
 	return (0);
 }
