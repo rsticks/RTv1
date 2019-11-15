@@ -18,7 +18,7 @@ OBJ = $(SRC:.c=.o)
 LIBS = libft/libft.a ftvector/ftvector.a
 HEADERS = -I ./includes -I ./libft/includes -I ./ftvector/includes
 HDR = includes/RTv1.h
-FLAGS = -Wall -Wextra -Werror -g
+FLAGS = -Wall -Wextra -g
 CGFLAGS = -lmlx -framework OpenGL -framework AppKit
 INCLUDES	=	-I./frameworks/SDL2.framework/Versions/A/Headers \
 				-I./frameworks/SDL2_ttf.framework/Versions/A/Headers \

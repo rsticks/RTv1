@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 16:20:37 by daron             #+#    #+#             */
-/*   Updated: 2019/11/15 16:11:15 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 18:07:22 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,8 +227,9 @@ typedef struct			s_cl
 ** It's help you - http://hugi.scene.org/online/hugi24/coding%20graphics%20chris%20dragan%20raytracing%20shapes.htm
 */
 
-t_cl_object		*transform_obj_data(t_object *obj, int *count);
-t_cl_light		*transform_light_data(t_light *light, int *count);
+void				start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray);
+t_cl_object			*transform_obj_data(t_object *obj, int *count);
+t_cl_light			*transform_light_data(t_light *light, int *count);
 void				init_cl(t_cl *cl);
 void				events(t_ray ray, t_sdl sdl);
 void 				scene_parser(t_sdl *sdl, char *scene_name);

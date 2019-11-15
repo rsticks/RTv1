@@ -6,7 +6,7 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:32:59 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/15 16:16:48 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 16:52:21 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@ t_cl_object		*transform_obj_data(t_object *obj, int *count)
 	t_object	*past_obj;
 
 	past_obj = obj;
-	count = 0;
+	*count = 0;
+	printf("pered\n");
 	while(obj)
 	{
-		count++;
+		(*count)++;
 		obj = obj->next;
 	}
+	printf("count = %d\n", *count);
 	cl_obj = (t_cl_object*)malloc(sizeof(t_cl_object) * *count);
-	count = 0;
+	*count = 0;
 	obj = past_obj;
 	while (obj)
 	{
@@ -42,9 +44,10 @@ t_cl_object		*transform_obj_data(t_object *obj, int *count)
 		cl_obj[*count].name = obj->name;
 		cl_obj[*count].specular = obj->specular;
 		cl_obj[*count].t = obj->t;
-		count++;
+		(*count)++;
 		obj = obj->next;
 	}
+	printf("transform obj, count = %d\n", *count);
 	return(cl_obj);
 }
 
@@ -54,14 +57,14 @@ t_cl_light		*transform_light_data(t_light *light, int *count)
 	t_light		*p_light;
 
 	p_light = light;
-	count = 0;
+	*count = 0;
 	while (light)
 	{
-		count++;
+		(*count)++;
 		light = light->next;
 	}
 	cl_light = (t_cl_light*)malloc(sizeof(t_cl_light) * *count);
-	count = 0;
+	*count = 0;
 	while (p_light)
 	{
 		cl_light[*count].x_pos = p_light->pos.x;
@@ -78,8 +81,9 @@ t_cl_light		*transform_light_data(t_light *light, int *count)
 		cl_light[*count].y_n = p_light->n.y;
 		cl_light[*count].z_n = p_light->n.z;
 		cl_light[*count].new_inten = p_light->new_inten;
-		count++;
+		(*count)++;
 		p_light = p_light->next;
 	}
+	printf("transform light, count = %d\n", *count);
 	return(cl_light);
 }

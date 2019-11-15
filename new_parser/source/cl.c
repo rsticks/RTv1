@@ -6,11 +6,18 @@
 /*   By: rsticks <rsticks@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 13:45:58 by rsticks           #+#    #+#             */
-/*   Updated: 2019/11/15 16:15:07 by rsticks          ###   ########.fr       */
+/*   Updated: 2019/11/15 19:15:57 by rsticks          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RTv1.h"
+
+
+const char *hello = "__kernel void xer3(int xer, int xer2)				\
+{																			\
+	xer = 3;																\
+	xer2 = 4;																\
+}";
 
 void			mem_to_kernel(t_sdl *sdl, t_ray *ray, double *d_mem, int *i_mem)
 {
@@ -61,15 +68,17 @@ void			init_cl(t_cl *cl)
 	i = read(fd, k_s, 10000);
 	k_s[i] = '\0';
 	k_l = ft_strlen(k_s);
-	cl->prog = clCreateProgramWithSource(cl->context, 1,
-	(const char**)&k_s, &k_l, &error);
+	cl->prog = clCreateProgramWithSource(cl->context, 1, (const char**)&k_s, &k_l, &error);
 	error = clBuildProgram(cl->prog, 1, cl->dev_id, NULL, NULL, NULL);
+	clGetProgramBuildInfo(cl->prog, cl->dev_id[0], CL_PROGRAM_BUILD_LOG, 0, NULL, &hello);
+	clGetProgramBuildInfo(cl->prog, cl->dev_id[0], CL_PROGRAM_BUILD_LOG, hello, test, NULL);
+	printf("--------------------------------DEBUG------------------------------------\n%s\n", test);
 	cl->kernel = clCreateKernel(cl->prog, "start", &error);
-	cl->obj_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_object) * cl->o_count, &cl->cl_obj, &error);
-	cl->light_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_light) * cl->l_count, &cl->cl_light, &error);
-	cl->img = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * W_HEIGHT * W_WIDTH, NULL, &error);
-	cl->i_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * 2, NULL, &error);	
-	cl->d_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(double) * 11, NULL, &error);
+	cl->obj_mem = 	clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_object) * cl->o_count, NULL, &error);
+	cl->light_mem = clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(t_cl_light) * cl->l_count, NULL, &error);
+	cl->img = 		clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * W_HEIGHT * W_WIDTH, NULL, &error);
+	cl->i_mem = 	clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(int) * 2, NULL, &error);	
+	cl->d_mem = 	clCreateBuffer(cl->context, CL_MEM_READ_WRITE, sizeof(double) * 11, NULL, &error);
 	error = clSetKernelArg(cl->kernel, 0, sizeof(cl_mem), &cl->obj_mem);
 	error = clSetKernelArg(cl->kernel, 1, sizeof(cl_mem), &cl->light_mem);
 	error = clSetKernelArg(cl->kernel, 2, sizeof(cl_mem), &cl->img);
@@ -86,19 +95,27 @@ void			start_kernel(t_cl *cl, t_sdl *sdl, t_ray *ray)
 	int			p_gws;
 	int 		x;
 	int			y;
+	t_cl_object *obj;
 
+	obj = cl->cl_obj;
+	printf("count_o = %d\n", obj[0].name);
+	printf("count = %d\n", cl->o_count);
 	mem_to_kernel(sdl, ray, d_mem, i_mem);
 	gws = W_WIDTH * W_HEIGHT;
 
 	err = clEnqueueWriteBuffer(cl->queue, cl->i_mem, CL_TRUE, 0, sizeof(int) * 2, i_mem, 0, NULL, NULL);
+	printf("clEnqueueWriteBuffer %d\n", err);
 	err = clEnqueueWriteBuffer(cl->queue, cl->d_mem, CL_TRUE, 0, sizeof(double) * 11, d_mem, 0, NULL, NULL);
+	printf("clEnqueueWriteBuffer %d\n", err);
 	err = clEnqueueWriteBuffer(cl->queue, cl->obj_mem, CL_TRUE, 0, sizeof(t_cl_object) * cl->o_count, &cl->cl_obj, 0, NULL, NULL);
-	err = clEnqueueWriteBuffer(cl->queue, cl->obj_mem, CL_TRUE, 0, sizeof(t_cl_light) * cl->l_count, &cl->cl_light, 0, NULL, NULL);
-	
+	//	  clEnqueueWriteBuffer(ren.queue, scene_mem, CL_TRUE, 0, sizeof(t_object) * n, &scene, 0, NULL, NULL);
+	printf("clEnqueueWriteBuffer %d\n", err);
+	err = clEnqueueWriteBuffer(cl->queue, cl->light_mem, CL_TRUE, 0, sizeof(t_cl_light) * cl->l_count, &cl->cl_light, 0, NULL, NULL);
+	printf("clEnqueueWriteBuffer %d\n", err);
 	err = clEnqueueNDRangeKernel(cl->queue, cl->kernel, 1, NULL, &gws, NULL, 0, NULL, NULL);
-
+	printf("clEnqueueNDRangeKernel %d\n", err);
 	err = clEnqueueReadBuffer(cl->queue, cl->img, CL_TRUE, 0, sizeof(int) * gws, &cl->data, 0, NULL, NULL);
-
+	printf("clEnqueueReadBuffer %d\n", err);
 	p_gws = 0;
 	while (p_gws < (int)gws)
 	{
